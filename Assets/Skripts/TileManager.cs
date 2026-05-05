@@ -16,6 +16,10 @@ public class TileManager : MonoBehaviour
     public float tileLength = 10f;
     public Transform player;
 
+    [Header("Speed Settings")]
+    public float gameSpeed = 1.0f;
+    public float speedIncreasePerMinute = 0.2f;
+
     [Header("Background Settings")]
     public float backgroundOffset = 0f;
 
@@ -27,6 +31,8 @@ public class TileManager : MonoBehaviour
     private int lastObstacleIndex = -1;
     private int spawnedTilesCount = 0;
 
+    private float timeSinceStart = 0f;
+
     void Start()
     {
         for (int i = 0; i < tilesOnScreen; i++)
@@ -35,6 +41,15 @@ public class TileManager : MonoBehaviour
 
     void Update()
     {
+        timeSinceStart += Time.deltaTime;
+
+        if (timeSinceStart >= 60f)
+        {
+            timeSinceStart -= 60f;
+            gameSpeed += speedIncreasePerMinute;
+
+        }
+
         if (player.position.z - destroyDistance > spawnZ - tilesOnScreen * tileLength)
         {
             SpawnTile();

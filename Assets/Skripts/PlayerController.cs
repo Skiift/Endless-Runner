@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float forwardSpeed = 10f;
+
+    public TileManager tileManager;
+
+    [Header("Lane Settings")]
     public float laneDistance = 3f;
     public float laneSpeed = 12f;
 
@@ -28,6 +32,11 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+
+        if (tileManager == null)
+        {
+            tileManager = FindObjectOfType<TileManager>();
+        }
     }
 
     void Update()
@@ -79,10 +88,16 @@ public class PlayerController : MonoBehaviour
 
         velocityY += gravity * Time.deltaTime;
 
+        float currentForwardSpeed = forwardSpeed;
+        if (tileManager != null)
+        {
+            currentForwardSpeed *= tileManager.gameSpeed;
+        }
+
         Vector3 moveVector = new Vector3(
             deltaX,
             velocityY * Time.deltaTime,
-            forwardSpeed * Time.deltaTime
+            currentForwardSpeed * Time.deltaTime
         );
 
         controller.Move(moveVector);
